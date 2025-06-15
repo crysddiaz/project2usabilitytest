@@ -366,11 +366,13 @@ elif st.session_state.current_step == "Feedback":
                 st.session_state.task_success.get("Task 3", False),
             ]
             # append to google sheets
-            sheet.append_row(row)
-
-            st.success("Feedback submitted. Redirecting.....")
-            st.session_state.current_step = "Thank You"
-            st.rerun()
+            try:
+                sheet.append_row(row)
+                st.success("Feedback submitted. Redirecting.....")
+                st.session_state.current_step = "Thank You"
+                st.rerun()
+            except Exception as e:
+                st.error(f"Failed to submit feedback: {e}")
 
 #thank you page
 elif st.session_state.current_step == "Thank You":
