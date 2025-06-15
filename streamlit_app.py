@@ -26,9 +26,6 @@ sheet = client.open_by_key(spreadsheet_id).sheet1
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
 
-st.write("Current feedback from Google Sheets:")
-st.dataframe(df)
-
 
 
 # Initialize session state for task timing
