@@ -352,11 +352,8 @@ elif st.session_state.current_step == "Feedback":
         elif not feedback.strip():
             st.warning(f"We appreciate your feedback! Please provide a suggestion or comment")
         else:
-            st.success("Feedback submitted. Redirecting.....")
-            st.session_state.current_step = "Thank You"
-
-            #feedback dictionary
-            feedback_data_flat = {
+            #data row for google sheets
+            row = [
                 "name": name,
                 "age": age,
                 "difficulty": difficulty,
@@ -364,11 +361,14 @@ elif st.session_state.current_step == "Feedback":
                 "Task 1 Duration": st.session_state.task_durations.get("Task 1", 0),
                 "Task 2 Duration": st.session_state.task_durations.get("Task 2", 0),
                 "Task 3 Duration": st.session_state.task_durations.get("Task 3", 0),
-                "Task 1 Success": st.session_state.task_success.get("Task 1", 0),
-                "Task 2 Success": st.session_state.task_success.get("Task 2", 0),
-                "Task 3 Success": st.session_state.task_success.get("Task 3", 0),
-            }
+                "Task 1 Success": st.session_state.task_success.get("Task 1", False),
+                "Task 2 Success": st.session_state.task_success.get("Task 2", False),
+                "Task 3 Success": st.session_state.task_success.get("Task 3", False),
+            ]
+            # append to google sheets
+            sheet.append_row(row)
 
+            #save locally
             df_feedback= pd.DataFrame([feedback_data_flat])
             if not os.path.exists("data"):
                 os.makedirs("data")
@@ -377,6 +377,7 @@ elif st.session_state.current_step == "Feedback":
                 df_feedback.to_csv(feedback_file, mode= "a", header= False, index= False)
             else:
                 df_feedback.to_csv(feedback_file, mode= "w", header= True, index= False)
+            st.success("Feedback submitted. Redirecting.....")
             st.session_state.current_step = "Thank You"
             st.rerun()
 
