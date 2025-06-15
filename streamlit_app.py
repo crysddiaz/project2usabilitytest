@@ -1,4 +1,6 @@
 import streamlit as st
+import gspread
+from google.oauth2.service_account import Credentials
 import requests
 import pandas as pd
 import numpy as np
@@ -8,6 +10,21 @@ import os
 
 # enable usability test
 st.set_page_config(page_title="Alternative Fuel Finder- Usability Test", layout="wide")
+
+#JSON credentials
+SERVICE_ACCOUNT_FILE = 'usabilitytesting-0a1f76d20fbd.json'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+client = gspread.authorize(creds)
+sheet = client.open("Usability Feedback").sheet1  # or by URL: client.open_by_url(url)
+
+data = sheet.get_all_records()
+df = pd.DataFrame(data)
+
+st.write("Current feedback from Google Sheets:")
+st.dataframe(df)
+
+
 
 # Initialize session state for task timing
 if "task_start_times" not in st.session_state:
@@ -368,7 +385,6 @@ elif st.session_state.current_step == "Thank You":
     Your input helps us improve the Alternative Fuel Finder experience for everyone.
     You may now close this window.
     """)
-
 
 
 
