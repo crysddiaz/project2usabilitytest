@@ -19,7 +19,9 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 creds_info = st.secrets["GOOGLE_CREDS"]
 creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
 client = gspread.authorize(creds)
-sheet = client.open("Usability Feedback").sheet1
+
+spreadsheet_id = '1nTTbqs2ZPr_mcT24QgMAmem8S7p6jhFcQWvUAC6LCLI'
+sheet = client.open_by_key(spreadsheet_id).sheet1
 
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
