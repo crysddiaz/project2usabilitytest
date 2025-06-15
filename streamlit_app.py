@@ -7,16 +7,19 @@ import numpy as np
 import altair as alt
 import time
 import os
+import json
 
 # enable usability test
 st.set_page_config(page_title="Alternative Fuel Finder- Usability Test", layout="wide")
 
 #JSON credentials
-SERVICE_ACCOUNT_FILE = 'usabilitytesting-0a1f76d20fbd.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+# Load JSON credentials from Streamlit secrets
+creds_info = json.loads(st.secrets["GOOGLE_CREDS_JSON"])
+creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
 client = gspread.authorize(creds)
-sheet = client.open("Usability Feedback").sheet1  # or by URL: client.open_by_url(url)
+sheet = client.open("Usability Feedback").sheet1
 
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
