@@ -15,8 +15,8 @@ st.set_page_config(page_title="Alternative Fuel Finder- Usability Test", layout=
 #JSON credentials
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-# Load JSON credentials from Streamlit secrets
-creds_info = json.loads(st.secrets["GOOGLE_CREDS_JSON"])
+# JSON credentials from Streamlit secrets
+creds_info = st.secrets["GOOGLE_CREDS"]
 creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
 client = gspread.authorize(creds)
 sheet = client.open("Usability Feedback").sheet1
